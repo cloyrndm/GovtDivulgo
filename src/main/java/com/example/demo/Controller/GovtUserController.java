@@ -57,10 +57,6 @@ GovtUserService govtUserService;
         System.out.println("------I GOT INSIDE THE LOGIN CONTROLLER-------");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String img1 = "image/love.png";
-        String img2 = "image/lra.png";
-        String img3 = "image/lto.png";
-        String img4 = "image/sss.png";
         session.setAttribute("username",username);
         session.setAttribute("password",password);
 
@@ -72,28 +68,28 @@ GovtUserService govtUserService;
 
         if (user.getType().equals("PAG") ) {
 //            model.addAttribute("complaints",complaints);
-            model.addAttribute("img",img1);
+            model.addAttribute("img","image/love.png");
 //            session.setAttribute("img",img1);
             session.setAttribute("type",user.getType());
             return "homepage";
         }
         if (user.getType().equals("LRA")) {
 //            model.addAttribute("complaints",complaints);
-            model.addAttribute("img",img2);
+            model.addAttribute("img","image/lra.png");
 //            session.setAttribute("img",img2);
             session.setAttribute("type",user.getType());
             return "homepage";
         }
         if (user.getType().equals("LTO")) {
 //            model.addAttribute("complaints",complaints);
-            model.addAttribute("img",img3);
+            model.addAttribute("img","image/lto.png");
 //            session.setAttribute("img",img3);
             session.setAttribute("type",user.getType());
             return "homepage";
         }
         if (user.getType().equals("SSS")) {
 //            model.addAttribute("complaints",complaints);
-            model.addAttribute("img",img4);
+            model.addAttribute("img","image/sss.png");
 //            session.setAttribute("img",img4);
             session.setAttribute("type",user.getType());
             return "homepage";
