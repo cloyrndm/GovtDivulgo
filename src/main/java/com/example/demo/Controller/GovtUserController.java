@@ -50,6 +50,21 @@ GovtUserService govtUserService;
         return "login";
     }
 
+    @RequestMapping("/homepage")
+    private String homepage(){
+        return "homepage";
+    }
+
+//    @RequestMapping("/view")
+//    private String view(){
+//        return "view";
+//    }
+
+    @RequestMapping("/sent")
+    private String sent(){
+        return "sent";
+    }
+
     @RequestMapping("/login")
     public String login(HttpServletRequest request, Model model, HttpSession session){
 
@@ -68,14 +83,14 @@ GovtUserService govtUserService;
 
         if (user.getType().equals("PAG") ) {
 //            model.addAttribute("complaints",complaints);
-            model.addAttribute("img","image/love.png");
+            model.addAttribute("img","@{/image/love.png}");
 //            session.setAttribute("img",img1);
             session.setAttribute("type",user.getType());
             return "homepage";
         }
         if (user.getType().equals("LRA")) {
 //            model.addAttribute("complaints",complaints);
-            model.addAttribute("img","image/lra.png");
+            model.addAttribute("img","@{/image/lra.png}");
 //            session.setAttribute("img",img2);
             session.setAttribute("type",user.getType());
             return "homepage";
@@ -83,13 +98,14 @@ GovtUserService govtUserService;
         if (user.getType().equals("LTO")) {
 //            model.addAttribute("complaints",complaints);
             model.addAttribute("img","image/lto.png");
+//            model.addAttribute("img","@{/image/lto.png}");
 //            session.setAttribute("img",img3);
             session.setAttribute("type",user.getType());
             return "homepage";
         }
         if (user.getType().equals("SSS")) {
 //            model.addAttribute("complaints",complaints);
-            model.addAttribute("img","image/sss.png");
+            model.addAttribute("img","@{/image/sss.png}");
 //            session.setAttribute("img",img4);
             session.setAttribute("type",user.getType());
             return "homepage";
