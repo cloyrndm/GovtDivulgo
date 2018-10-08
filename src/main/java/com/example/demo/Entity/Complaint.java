@@ -16,7 +16,7 @@ public class Complaint {
 
     @Id
     @GeneratedValue
-    private Long complaint_id;
+    private Long complaintId;
 
     @Column(name = "user_id")
     private Long userId;
@@ -33,12 +33,35 @@ public class Complaint {
 
     private String file_path;
 
+    private String govtAgency;
+
+    private String status;
+
+//    private String
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getGovtAgency() {
+        return govtAgency;
+    }
+
+    public void setGovtAgency(String govtAgency) {
+        this.govtAgency = govtAgency;
     }
 
     public String getTime() {
@@ -50,11 +73,11 @@ public class Complaint {
     }
 
     public Long getComplaint_id() {
-        return complaint_id;
+        return complaintId;
     }
 
     public void setComplaint_id(Long complaint_id) {
-        this.complaint_id = complaint_id;
+        this.complaintId = complaint_id;
     }
 
     public String getUser_complaint() {

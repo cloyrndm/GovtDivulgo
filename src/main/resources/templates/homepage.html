@@ -1,7 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Divulgo: Send Complaints</title>
+    <style>
+
+        .thumbnail{
+            position: relative;
+            z-index: 0;
+        }
+
+        .thumbnail:hover{
+            background-color: transparent;
+            z-index: 50;
+        }
+
+        .thumbnail span{ /*CSS for enlarged image*/
+            position: absolute;
+            background-color: lightyellow;
+            padding: 5px;
+            left: -1000px;
+            border: 1px dashed gray;
+            visibility: hidden;
+            color: black;
+            text-decoration: none;
+
+        }
+
+        .thumbnail span img{ /*CSS for enlarged image*/
+            border-width: 0;
+            padding: 2px;
+            /*width: 250px;*/
+            /*height: 250px;*/
+        }
+
+        .thumbnail:hover span{ /*CSS for enlarged image on hover*/
+            visibility: visible;
+            top: 0;
+            left: 60px; /*position where enlarged image should offset horizontally */
+
+        }
+    </style>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
   <link rel="stylesheet" type="text/css" href="css/homepage.css">
   <script type="text/javascript" src="js/homepage.js"></script>
 <!--   boostrap -->
@@ -25,146 +65,73 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Brand</a>
+                <a class="navbar-brand" href="#">Divulgo</a>
             </div>
 
             <div class="collapse navbar-collapse pull-sm-left" id="collapseLeft">
                 <ul class="nav navbar-nav">
                     <li class="active"><a th:href="@{/homepage}">Complaints<span class="sr-only">(current)</span></a></li>
-                    <!--<li><a th:href="@{/sent}">Sent</a></li>-->
+                    <!--&lt;!&ndash;a href="viewcomplaints.html" th:href="@{/homepage}"&ndash;&gt;-->
+                    <!--HFdhjfhkjhlk;u;ig;i.vu-->
+                    <li><a href="viewcomplaints.html" th:href="@{/complaint}">Sent</a></li>
                 </ul>
             </div>
-
             <div class="collapse navbar-collapse" id="collapseRight">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a th:href="@{/logout}" type="hidden">Logout</a></li>
-
-
                 </ul>
             </div>
         </div>
     </nav>
 </head>
 <body>
-<img src=th:text="${img}" style="width:100px;height:100px;" class="center"/>
+<!--<h1 th:text="${img}">-->
+<img th:src="${img}" style="width:100px;height:100px;" class="center"/>
 <div class="container">
   <div class="row">
   <table id="example" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
-                <!--<img th:src="${img}"/>-->
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
+                <th>Complaint Id</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Complaint</th>
+                <th>View Image</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Reply</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Garrett Winters</td>
-                <td>Accountant</td>
-                <td>Tokyo</td>
-                <td>63</td>
-                <td>2011/07/25</td>
-                <td>$170,750</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-                <td>$86,000</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Cedric Kelly</td>
-                <td>Senior Javascript Developer</td>
-                <td>Edinburgh</td>
-                <td>22</td>
-                <td>2012/03/29</td>
-                <td>$433,060</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Airi Satou</td>
-                <td>Accountant</td>
-                <td>Tokyo</td>
-                <td>33</td>
-                <td>2008/11/28</td>
-                <td>$162,700</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Brielle Williamson</td>
-                <td>Integration Specialist</td>
-                <td>New York</td>
-                <td>61</td>
-                <td>2012/12/02</td>
-                <td>$372,000</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Herrod Chandler</td>
-                <td>Sales Assistant</td>
-                <td>San Francisco</td>
-                <td>59</td>
-                <td>2012/08/06</td>
-                <td>$137,500</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Rhona Davidson</td>
-                <td>Integration Specialist</td>
-                <td>Tokyo</td>
-                <td>55</td>
-                <td>2010/10/14</td>
-                <td>$327,900</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Colleen Hurst</td>
-                <td>Javascript Developer</td>
-                <td>San Francisco</td>
-                <td>39</td>
-                <td>2009/09/15</td>
-                <td>$205,500</td>
-            </tr>
-            <tr>
-<!--                   <td><input type="checkbox" name=""></td> -->
-                <td>Sonya Frost</td>
-                <td>Software Engineer</td>
-                <td>Edinburgh</td>
-                <td>23</td>
-                <td>2008/12/13</td>
-                <td>$103,600</td>
-            </tr>
+            <tr th:each="complaints : ${complaint}">
+                <td th:text="${complaints.complaint_id}"></td>
+                <td th:text="${complaints.date}"></td>
+                <td th:text="${complaints.time}"></td>
+                <td th:text="${complaints.user_complaint}"></td>
+                <div class="instructions"></div>
+                <td>
+                    <a class="thumbnail" href="#thumb"><img th:src="${complaints.file_path}" width="80px" height="45px" border="0" /><span><img th:src="${complaints.file_path}"  width="250px" height="400px"  /><br />Image Preview</span></a>
+                </td>
+                <td th:text="${complaints.user_lat}"></td>
+                <td th:text="${complaints.user_long}"></td>
+                <form method = "POST" action = "/reply">
+                    <input type="hidden" th:value="${complaints.complaint_id}" name="complaintid">
+                    <input type="hidden" th:value="${agency}" name="complaintagency">
+                    <input type="hidden" th:value="${userid}" name="complaintagency">
+                <td>
+                    <div id="container">
+                        <div class="buttonInside">
+                            <input placeholder="Enter Reply" id="submit" name="replyy" >
+                            <button type="submit" id="erase">&#9993;</button>
+                        </div>
+                    </div>
+                </td>
 
-        </tbody>
-<!--         <tfoot>
-            <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
+                </form>
             </tr>
-        </tfoot> -->
+        </tbody>
+
+
     </table>
   </div>
 </div>
