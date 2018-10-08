@@ -4,8 +4,10 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Entity.Complaint;
 import com.example.demo.Entity.GovtUser;
 
+import com.example.demo.Entity.User;
 import com.example.demo.Repository.ComplaintRepository;
 import com.example.demo.Repository.GovtUserRepository;
+import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.GovtUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ public class GovtUserImpl implements GovtUserService {
     GovtUserRepository govtUserRepository;
     @Autowired
     ComplaintRepository complaintRepository;
+    @Autowired
+    UserRepository userRepository;
 
 
 
@@ -58,6 +62,11 @@ public class GovtUserImpl implements GovtUserService {
     @Override
     public List<Complaint> findByStatus(String status) {
         return complaintRepository.findByStatus(status);
+    }
+
+    @Override
+    public User findByUserId(Long id) {
+        return userRepository.findByUserId(id);
     }
 
 //    @Override

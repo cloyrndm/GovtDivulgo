@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.Entity.Complaint;
 import com.example.demo.Entity.ComplaintReply;
 import com.example.demo.Entity.GovtUser;
+import com.example.demo.Entity.User;
 import com.example.demo.Service.ComplaintReplyService;
 import com.example.demo.Service.ComplaintService;
 import com.example.demo.Service.GovtUserService;
@@ -13,10 +14,16 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 
 /**
@@ -125,11 +132,77 @@ public class GovtUserController {
         return null;
     }
 
+    private void sendEmail(String to,String reply,String subj) throws UnknownHostException {
 
+//        final String APIKey = "ad1cbf3ebf8ee591bb9d249d0a0c30e6";
+//        final String SecretKey = "b7f1d90c92060ffa50d93d9ab31566cc";
+//
+        String from = "divulgo.kc@gmail.com";
+//
+//        Properties props = new Properties ();
+//
+//        props.put ("mail.smtp.host", "in.mailjet.com");
+//        props.put ("mail.smtp.socketFactory.port", "465");
+//        props.put ("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+//        props.put ("mail.smtp.auth", "true");
+//        props.put ("mail.smtp.port", "465");
+//
+//        Session session = Session.getDefaultInstance (props,
+//                new javax.mail.Authenticator ()
+//                {
+//                    protected PasswordAuthentication getPasswordAuthentication ()
+//                    {
+//                        return new PasswordAuthentication (APIKey, SecretKey);
+//                    }
+//                });
+//
+//        try
+//        {
+//
+//            Message message = new MimeMessage(session);
+//            message.setFrom (new InternetAddress(from));
+//            message.setRecipients (Message.RecipientType.TO, InternetAddress.parse(to));
+//            message.setSubject (subj);
+//            message.setText (reply);
+//
+//            Transport.send (message);
+//
+//        }
+//        catch (MessagingException e)
+//        {
+//            throw new RuntimeException (e);
+//        }
+
+//        String to = "sonoojaiswal1988@gmail.com";//change accordingly
+//        String from = "sonoojaiswal1987@gmail.com";change accordingly
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        String host =  inetAddress.getHostAddress();//or IP address
+        System.out.println(host);
+
+        //Get the session object
+        Properties properties = System.getProperties();
+        properties.setProperty("mail.smtp.host", host);
+        Session session = Session.getDefaultInstance(properties);
+
+        //compose the message
+        try{
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.setSubject(subj);
+            message.setText(reply);
+
+            // Send message
+            Transport.send(message);
+            System.out.println("message sent successfully....");
+
+        }catch (MessagingException mex) {mex.printStackTrace();}
+
+    }
 
 
     @RequestMapping("/reply")
-    private String reply(HttpServletRequest request,HttpSession session, Model model,ModelMap map,ComplaintReply complaintReply){
+    private String reply(HttpServletRequest request,HttpSession session, Model model,ModelMap map,ComplaintReply complaintReply) throws UnknownHostException {
 //      --------------------get from html-----------------------
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -159,15 +232,19 @@ public class GovtUserController {
         System.out.println("Time "+time);
         System.out.println("Type: "+type);
 
+
         Complaint complaint1 = govtUserService.findByComplaintId(Long.parseLong(complaintId));
         complaint1.setStatus("1");
         complaintService.save(complaint1);
+        //      --------------------------getemail----------------------
+        User user = govtUserService.findByUserId(complaint1.getUserId());
         List<Complaint> complaint = govtUserService.findByGovtAgencyAndStatus(type,status);
         System.out.println(complaint);
         if(type.equals("PAG")){
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","PAG");
             map.addAttribute("img","/images/love.png");
+            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: PAG-IBIG's feedback reply");
             return "homepage";
         }
 
@@ -175,18 +252,21 @@ public class GovtUserController {
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","LRA");
             map.addAttribute("img","/images/love.png");
+            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: LRA's feedback reply");
             return "homepage";
         }
         if(type.equals("LTO")){
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","LTO");
             map.addAttribute("img","/images/love.png");
+            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: LTO's feedback reply");
             return "homepage";
         }
         if(type.equals("SSS"))
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","SSS");
             map.addAttribute("img","/images/love.png");
+            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: SSS's feedback reply");
             return "homepage";
     }
 
