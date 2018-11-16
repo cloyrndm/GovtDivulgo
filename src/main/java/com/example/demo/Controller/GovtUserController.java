@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -102,7 +103,7 @@ public class GovtUserController {
         return "homepage";
     }
 
-    @RequestMapping("/complaint")
+    @RequestMapping("/viewcomplaints")
     private String viewcomplaints(HttpSession session,Model model,ModelMap map){
         String type = (String)session.getAttribute("type");
         Long userid = (Long)session.getAttribute("userid");
@@ -116,20 +117,20 @@ public class GovtUserController {
 
         if(type.equals("LRA")){
             model.addAttribute("viewcomplaint",complaintReply);
-            map.addAttribute("img","/images/love.png");
+            map.addAttribute("img","/images/lra.png");
             return "viewcomplaints";
         }
         if(type.equals("LTO")){
             model.addAttribute("viewcomplaint",complaintReply);
-            map.addAttribute("img","/images/love.png");
+            map.addAttribute("img","/images/lto.png");
             return "viewcomplaints";
         }
         if(type.equals("SSS")) {
             model.addAttribute("viewcomplaint", complaintReply);
-            map.addAttribute("img", "/images/love.png");
+            map.addAttribute("img", "/images/sss.png");
             return "viewcomplaints";
         }
-        return null;
+        return "homepage";
     }
 
     private void sendEmail(String to,String reply,String subj) throws UnknownHostException {
@@ -173,8 +174,8 @@ public class GovtUserController {
 //            throw new RuntimeException (e);
 //        }
 
-//        String to = "sonoojaiswal1988@gmail.com";//change accordingly
-//        String from = "sonoojaiswal1987@gmail.com";change accordingly
+//      String to = "sonoojaiswal1988@gmail.com";//change accordingly
+//      String from = "sonoojaiswal1987@gmail.com";change accordingly
         InetAddress inetAddress = InetAddress.getLocalHost();
         String host =  inetAddress.getHostAddress();//or IP address
         System.out.println(host);
@@ -231,8 +232,6 @@ public class GovtUserController {
         System.out.println("Date: "+dateee);
         System.out.println("Time "+time);
         System.out.println("Type: "+type);
-
-
         Complaint complaint1 = govtUserService.findByComplaintId(Long.parseLong(complaintId));
         complaint1.setStatus("1");
         complaintService.save(complaint1);
@@ -240,39 +239,43 @@ public class GovtUserController {
         User user = govtUserService.findByUserId(complaint1.getUserId());
         List<Complaint> complaint = govtUserService.findByGovtAgencyAndStatus(type,status);
         System.out.println(complaint);
+//        List<Complaint> complaint2 = new ArrayList<>();
+
+//        for(int i=0; i<complaint.size(); i++){
+//            complaint2 = govtUserService.findByGovtAgency(complaint.get(i).getFile_path());
+//        }
+//        complaint.getClass()
         if(type.equals("PAG")){
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","PAG");
             map.addAttribute("img","/images/love.png");
-            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: PAG-IBIG's feedback reply");
+//            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: PAG-IBIG's feedback reply");
             return "homepage";
         }
-
         if(type.equals("LRA")){
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","LRA");
-            map.addAttribute("img","/images/love.png");
-            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: LRA's feedback reply");
+            map.addAttribute("img","/images/lra.png");
+//            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: LRA's feedback reply");
             return "homepage";
         }
         if(type.equals("LTO")){
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","LTO");
-            map.addAttribute("img","/images/love.png");
-            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: LTO's feedback reply");
+            map.addAttribute("img","/images/lto.png");
+//            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: LTO's feedback reply");
             return "homepage";
         }
         if(type.equals("SSS"))
             model.addAttribute("complaint",complaint);
             map.addAttribute("agency","SSS");
-            map.addAttribute("img","/images/love.png");
-            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: SSS's feedback reply");
+            map.addAttribute("img","/images/sss.png");
+//            sendEmail(user.getEmail(),complaintReply.getComplaintReply(),"Divulgo: SSS's feedback reply");
             return "homepage";
     }
 
     @RequestMapping("/login")
     public String login(HttpServletRequest request, Model model, HttpSession session,ModelMap map){
-
 
         String type;
         System.out.println("------I GOT INSIDE THE LOGIN CONTROLLER-------");
@@ -285,7 +288,6 @@ public class GovtUserController {
         type=user.getType();
 
         String status = null;
-
 
         List<Complaint> complaint = govtUserService.findByGovtAgencyAndStatus(type,status);
 
@@ -330,8 +332,6 @@ public class GovtUserController {
             session.setAttribute("userid",user.getId());
             return "homepage";
         }
-
-
         return null;
     }
 
