@@ -112,6 +112,7 @@
                     <!--<input type="hidden" th:value="${userid}" name="complaintagency">-->
                 <form method = "POST" action = "/correction">
                     <input type="hidden" th:value="${complaints.user_complaint}" name="complaint">
+                    <input type="hidden" th:value="${complaints.complaint_id}" name="id">
                     <td>
                         <div id="container1">
                             <div class="buttonInside">

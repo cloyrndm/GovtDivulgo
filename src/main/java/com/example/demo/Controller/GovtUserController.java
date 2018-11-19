@@ -226,13 +226,20 @@ public class GovtUserController {
     }
 
     @RequestMapping("/correction")
-    private void correction(HttpServletRequest request,HttpSession session, Model model,ModelMap map,ComplaintReply complaintReply) throws IOException {
+    private String correction(HttpServletRequest request,HttpSession session, Model model,ModelMap map,ComplaintReply complaintReply) throws IOException {
         String complaint = request.getParameter("complaint");
         String agency = request.getParameter("agency");
+        String id = request.getParameter("id");
+        long idd = Long.valueOf(id);
+
+        Complaint complaint1 = complaintService.findByComplaintId(idd);
+        complaint1.setAgency(agency);
+        complaintService.save(complaint1);
 
         Article article = new Article();
         article.setContent(complaint);
         article.setAgency(agency);
+        article.setTitle("complaint");
         articleService.save(article);
 
         cleanContent(complaint);
@@ -240,6 +247,37 @@ public class GovtUserController {
         InverseTermFrequency();
         clean();
         TermFrequencyAndInverseTermFrequency();
+
+        String type = (String)session.getAttribute("type");
+        List<Complaint> complaint2 = govtUserService.findByAgencyAndStatus(type,null);
+//        System.out.println(complaint);
+//      --------------------------------------------------------
+        if(type.equals("PAG")){
+            model.addAttribute("complaint",complaint2);
+            map.addAttribute("agency","PAG");
+            map.addAttribute("img","/images/love.png");
+            return "homepage";
+        }
+
+        if(type.equals("LRA")){
+            model.addAttribute("complaint",complaint2);
+            map.addAttribute("agency","LRA");
+            map.addAttribute("img","/images/love.png");
+            return "homepage";
+        }
+        if(type.equals("LTO")){
+            model.addAttribute("complaint",complaint2);
+            map.addAttribute("agency","LTO");
+            map.addAttribute("img","/images/love.png");
+            return "homepage";
+        }
+        if(type.equals("SSS"))
+            model.addAttribute("complaint",complaint2);
+        map.addAttribute("agency","SSS");
+        map.addAttribute("img","/images/love.png");
+        return "homepage";
+
+
     }
 
     @PostMapping("/cleanContent")
@@ -247,18 +285,15 @@ public class GovtUserController {
 
         System.out.println("done scrape");
         File file = new File("C:\\Users\\Cloie Andrea\\IdeaProjects\\GovtDivulgo\\stopwords.txt");
-//        Set<String> stopWords = new LinkedHashSet<String>();
-        ArrayList<String> stopWords = new ArrayList<String>();
+        Set<String> stopWords = new LinkedHashSet<String>();
         List<String> ngrams = new ArrayList<String>();
+        List<String> minus = new ArrayList<String>();
         BufferedReader br = new BufferedReader(new FileReader(file));
-//        String regex = "\\d+";
-        int wc=0, tempWC=0;
-
-//        String[] words =content.replaceAll("[^a-zA-Z]", "").split("\\s+");
-        String[] words =content.replaceAll("[^a-zA-Z ]", "").split("\\s+");
         String regex = "[A-Z]+";
         Pattern r = Pattern.compile(regex);
-
+        int wc=0, tempWC=0;
+        String changeWord;
+        String[] words =content.replaceAll("[^a-zA-Z ]", "").split("\\s+");
 
         for(String line;(line = br.readLine()) != null;)
             stopWords.add(line.trim());
@@ -270,28 +305,27 @@ public class GovtUserController {
 
             wordsList.add(word);
         }
+
         System.out.println("After for loop:  " + wordsList);
 
-//        for(int i = 0; i < wordsList.size(); i++) {
-//            Matcher m = r.matcher(wordsList.get(i));
-//            if (m.find()) {
-////                System.out.println(wordsList.get(i));
-//                wordsList.remove(i);
-//                minus.add(wordsList.get(i));
-//                System.out.println("removed capital");
-//
-//            }
-//
-////        for(int i = 0; i < wordsList.size(); i++) {
-//            else if (stopWords.contains(wordsList.get(i))) {
-//                wordsList.remove(i);
-//                minus.add(wordsList.get(i));
-//                System.out.println("remove stop");
-//
-//            }
-//        }
-//
-//        wordsList.removeAll(minus);
+        for(int i = 0; i < wordsList.size(); i++) {
+            Matcher m = r.matcher(wordsList.get(i));
+            if (m.find()) {
+                wordsList.remove(i);
+                minus.add(wordsList.get(i));
+                System.out.println("removed capital");
+
+            }
+
+            else if (stopWords.contains(wordsList.get(i))) {
+                wordsList.remove(i);
+                minus.add(wordsList.get(i));
+                System.out.println("remove stop");
+
+            }
+        }
+
+        wordsList.removeAll(minus);
 
         for (String a:wordsList){
             PorterStemmer stemmer = new PorterStemmer();
@@ -301,18 +335,16 @@ public class GovtUserController {
             stemList.add(steem);
             System.out.println("stemmer: "+ steem);
         }
-        System.out.println("DONE STEMMING");
-
         Article sampleContent = articleService.findByContent(content);
         int articleid = sampleContent.getArticleId();
         for (String bag:stemList){
 
             Ngram sampleWord = ngramService.findByWords(bag);
-            if (sampleWord != null) {
+//            if (sampleWord != null) {
 //                int id = sampleWord.getArticleId();
 //                wc=sampleWord.getWordCount();
-            }
-            else {
+//            }
+            if (sampleWord == null) {
                 Ngram ngram = new Ngram();
 //                ngram.setArticleId(articleid);
                 ngram.setWords(bag);
@@ -323,7 +355,7 @@ public class GovtUserController {
 
         }
 
-        System.out.println("DONE SAVING STEM WORDS");
+//        System.out.println("DONE SAVING STEM WORDS");
         Set<String> unique = new HashSet<String>(stemList);
 
         for (String key : unique) {
@@ -355,7 +387,7 @@ public class GovtUserController {
             }
         }
         System.out.println("DONE NGRAM");
-        return "index";
+        return "homepage";
     }
 
     public void TermFrequency(){

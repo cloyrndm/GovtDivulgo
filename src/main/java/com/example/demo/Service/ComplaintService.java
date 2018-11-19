@@ -8,4 +8,5 @@ import com.example.demo.Entity.Complaint;
 public interface ComplaintService {
 //    void merge(Complaint complaint);
 void save(Complaint complaint);
+    Complaint findByComplaintId(Long id);
 }

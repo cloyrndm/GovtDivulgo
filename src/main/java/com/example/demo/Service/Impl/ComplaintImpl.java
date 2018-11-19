@@ -21,6 +21,11 @@ import org.springframework.stereotype.Service;
         complaintRepository.save(complaint);
     }
 
+    @Override
+    public Complaint findByComplaintId(Long id) {
+       return complaintRepository.findByComplaintId(id);
+    }
+
 /*    @Override
     public void merge(Complaint complaint) {
         complaintRepository.merge(complaint);
