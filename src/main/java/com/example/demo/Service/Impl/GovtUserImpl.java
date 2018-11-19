@@ -46,13 +46,13 @@ public class GovtUserImpl implements GovtUserService {
     }
 
     @Override
-    public List<Complaint> findByGovtAgency(String type) {
-        return complaintRepository.findByGovtAgency(type);
+    public List<Complaint> findByAgency(String type) {
+        return complaintRepository.findByAgency(type);
     }
 
     @Override
-    public List<Complaint> findByGovtAgencyAndStatus(String agency, String stat){
-        return complaintRepository.findByGovtAgencyAndStatus(agency,stat);
+    public List<Complaint> findByAgencyAndStatus(String agency, String stat){
+        return complaintRepository.findByAgencyAndStatus(agency,stat);
     }
     @Override
     public Complaint findByComplaintId(Long id){

@@ -1,30 +1,30 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Entity.Complaint;
-import com.example.demo.Entity.ComplaintReply;
-import com.example.demo.Entity.GovtUser;
-import com.example.demo.Entity.User;
-import com.example.demo.Service.ComplaintReplyService;
-import com.example.demo.Service.ComplaintService;
-import com.example.demo.Service.GovtUserService;
+import com.example.demo.Entity.*;
+import com.example.demo.Service.*;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -41,6 +41,18 @@ public class GovtUserController {
 
     @Autowired
     ComplaintService complaintService;
+
+    @Autowired
+    ArticleService articleService;
+
+    @Autowired
+    NgramService ngramService;
+
+    @Autowired
+    FrequencyService freService;
+
+    @Autowired
+    TfidfService tfidfService;
 
     @RequestMapping("/")
     private String goHome(HttpSession session){
@@ -74,7 +86,7 @@ public class GovtUserController {
     @RequestMapping("/homepage")
     private String homepage(Model model,ModelMap map,HttpSession session){
         String type = (String)session.getAttribute("type");
-        List<Complaint> complaint = govtUserService.findByGovtAgencyAndStatus(type,null);
+        List<Complaint> complaint = govtUserService.findByAgencyAndStatus(type,null);
 //        System.out.println(complaint);
 //      --------------------------------------------------------
         if(type.equals("PAG")){
@@ -201,6 +213,133 @@ public class GovtUserController {
 
     }
 
+    @RequestMapping("/correction")
+    private void correction(HttpServletRequest request,HttpSession session, Model model,ModelMap map,ComplaintReply complaintReply) throws IOException {
+        String complaint = request.getParameter("complaint");
+        String agency = request.getParameter("agency");
+
+        Article article = new Article();
+        article.setContent(complaint);
+        article.setAgency(agency);
+
+        cleanContent(complaint);
+    }
+
+    @PostMapping("/cleanContent")
+    public String cleanContent(String content) throws IOException {
+
+        System.out.println("done scrape");
+        File file = new File("C:\\Users\\Cloie Andrea\\IdeaProjects\\GovtDivulgo\\stopwords.txt");
+//        Set<String> stopWords = new LinkedHashSet<String>();
+        ArrayList<String> stopWords = new ArrayList<String>();
+        List<String> ngrams = new ArrayList<String>();
+        BufferedReader br = new BufferedReader(new FileReader(file));
+//        String regex = "\\d+";
+        int wc=0, tempWC=0;
+
+//        String[] words =content.replaceAll("[^a-zA-Z]", "").split("\\s+");
+        String[] words =content.replaceAll("[^a-zA-Z ]", "").split("\\s+");
+        String regex = "[A-Z]+";
+        Pattern r = Pattern.compile(regex);
+
+
+        for(String line;(line = br.readLine()) != null;)
+            stopWords.add(line.trim());
+        br.close();
+
+        ArrayList<String> wordsList = new ArrayList<String>();
+        ArrayList<String> stemList = new ArrayList<String>();
+        for (String word : words) {
+
+            wordsList.add(word);
+        }
+        System.out.println("After for loop:  " + wordsList);
+
+//        for(int i = 0; i < wordsList.size(); i++) {
+//            Matcher m = r.matcher(wordsList.get(i));
+//            if (m.find()) {
+////                System.out.println(wordsList.get(i));
+//                wordsList.remove(i);
+//                minus.add(wordsList.get(i));
+//                System.out.println("removed capital");
+//
+//            }
+//
+////        for(int i = 0; i < wordsList.size(); i++) {
+//            else if (stopWords.contains(wordsList.get(i))) {
+//                wordsList.remove(i);
+//                minus.add(wordsList.get(i));
+//                System.out.println("remove stop");
+//
+//            }
+//        }
+//
+//        wordsList.removeAll(minus);
+
+        for (String a:wordsList){
+            PorterStemmer stemmer = new PorterStemmer();
+            stemmer.setCurrent(a);
+            stemmer.stem();
+            String steem=stemmer.getCurrent();
+            stemList.add(steem);
+            System.out.println("stemmer: "+ steem);
+        }
+        System.out.println("DONE STEMMING");
+
+        Article sampleContent = articleService.findByContent(content);
+        int articleid = sampleContent.getArticleId();
+        for (String bag:stemList){
+
+            Ngram sampleWord = ngramService.findByWords(bag);
+            if (sampleWord != null) {
+//                int id = sampleWord.getArticleId();
+//                wc=sampleWord.getWordCount();
+            }
+            else {
+                Ngram ngram = new Ngram();
+//                ngram.setArticleId(articleid);
+                ngram.setWords(bag);
+                ngram.setWordCount(wc);
+                ngramService.save(ngram);
+
+            }
+
+        }
+
+        System.out.println("DONE SAVING STEM WORDS");
+        Set<String> unique = new HashSet<String>(stemList);
+
+        for (String key : unique) {
+            Ngram sampleWords = ngramService.findByWords(key);
+
+            int wordsid = sampleWords.getNgramId();
+//            int artid = sampleWords.getArticleId();
+
+            if (sampleWords != null) {
+                tempWC = sampleWords.getWordCount();
+                System.out.println("temp count:" + tempWC);
+                wc = tempWC + Collections.frequency(stemList, key);
+                sampleWords.setWordCount(wc);
+                ngramService.save(sampleWords);
+                Frequency fre = new Frequency();
+                fre.setFrequency(Collections.frequency(stemList, key));
+                fre.setNgramId(wordsid);
+                fre.setArtId(articleid);
+                fre.setWord(key);
+                freService.save(fre);
+
+            } else {
+                Frequency fre1 = new Frequency();
+                fre1.setFrequency(Collections.frequency(stemList, key));
+                fre1.setNgramId(wordsid);
+                fre1.setArtId(articleid);
+                fre1.setWord(key);
+                freService.save(fre1);
+            }
+        }
+        System.out.println("DONE NGRAM");
+        return "index";
+    }
 
     @RequestMapping("/reply")
     private String reply(HttpServletRequest request,HttpSession session, Model model,ModelMap map,ComplaintReply complaintReply) throws UnknownHostException {
@@ -237,7 +376,7 @@ public class GovtUserController {
         complaintService.save(complaint1);
         //      --------------------------getemail----------------------
         User user = govtUserService.findByUserId(complaint1.getUserId());
-        List<Complaint> complaint = govtUserService.findByGovtAgencyAndStatus(type,status);
+        List<Complaint> complaint = govtUserService.findByAgencyAndStatus(type,status);
         System.out.println(complaint);
 //        List<Complaint> complaint2 = new ArrayList<>();
 
@@ -289,7 +428,7 @@ public class GovtUserController {
 
         String status = null;
 
-        List<Complaint> complaint = govtUserService.findByGovtAgencyAndStatus(type,status);
+        List<Complaint> complaint = govtUserService.findByAgencyAndStatus(type,status);
 
         if(user==null){
             System.out.println("--------USER NOT FOUND-------");

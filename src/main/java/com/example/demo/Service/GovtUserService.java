@@ -12,8 +12,8 @@ import java.util.List;
 public interface GovtUserService {
     GovtUser findByUsernameAndPassword(String username, String password);
     List<Complaint> findAll();
-    List<Complaint> findByGovtAgency(String type);
-    List<Complaint> findByGovtAgencyAndStatus(String agency, String stat);
+    List<Complaint> findByAgency(String type);
+    List<Complaint> findByAgencyAndStatus(String agency, String stat);
     Complaint findByComplaintId(Long id);
     List<Complaint> findByStatus(String status);
     User findByUserId(Long id);

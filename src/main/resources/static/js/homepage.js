@@ -88,6 +88,10 @@ $("#erase").click(function(){
     $(this).prev().val("");
 });
 
+$("#erase1").click(function(){
+    $(this).prev().val("");
+});
+
 // preview and hide password
 $("#showPassword").click(function(){
     var foo = $(this).prev().attr("type");

@@ -33,7 +33,7 @@ public class Complaint {
 
     private String file_path;
 
-    private String govtAgency;
+    private String agency;
 
     private String status;
 
@@ -56,13 +56,29 @@ public class Complaint {
         this.date = date;
     }
 
-    public String getGovtAgency() {
-        return govtAgency;
+    public Long getComplaintId() {
+        return complaintId;
     }
 
-    public void setGovtAgency(String govtAgency) {
-        this.govtAgency = govtAgency;
+    public void setComplaintId(Long complaintId) {
+        this.complaintId = complaintId;
     }
+
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
+    }
+
+    //    public String getGovtAgency() {
+//        return govtAgency;
+//    }
+//
+//    public void setGovtAgency(String govtAgency) {
+//        this.govtAgency = govtAgency;
+//    }
 
     public String getTime() {
         return time;

@@ -45,6 +45,10 @@ label {
 #container{
     width: 300px;
 }
+
+#container1{
+    width: 300px;
+}
 input{
     height:25px;
     width:100%;

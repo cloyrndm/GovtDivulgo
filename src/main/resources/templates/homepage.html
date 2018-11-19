@@ -90,6 +90,7 @@
                 <th>View Image</th>
                 <th>Longitude</th>
                 <th>Latitude</th>
+                <th>Agency</th>
                 <th>Reply</th>
             </tr>
             </thead>
@@ -105,10 +106,37 @@
                 </td>
                 <td th:text="${complaints.user_lat}"></td>
                 <td th:text="${complaints.user_long}"></td>
+                <!--<form method = "POST" action = "/incorrect">-->
+                    <!--<input type="hidden" th:value="${complaints.user_complaint}" name="complaint">-->
+                    <!--<input type="hidden" th:value="${complaints.agency}" name="complaintagency">-->
+                    <!--<input type="hidden" th:value="${userid}" name="complaintagency">-->
+                <form method = "POST" action = "/correction">
+                    <input type="hidden" th:value="${complaints.user_complaint}" name="complaint">
+                    <td>
+                        <div id="container1">
+                            <div class="buttonInside">
+
+                                <!--<input type="hidden" th:value="${complaints.agency}" name="complaintagency">-->
+                                <!--<input type="hidden" th:value="${userid}" name="complaintagency">-->
+                                <!--<input placeholder="Enter Reply"  name="replyy" >-->
+                                <select  name="agency">
+                                    <option value="LTO">LTO</option>
+                                    <option value="LRA">LRA</option>
+                                    <option value="PAG-IBIG">PAG-IBIG</option>
+                                    <option value="SSS">SSS</option>
+                                </select>
+
+                                <button type="submit" id="erase1">&#9993;</button>
+                            </div>
+                        </div>
+                    </td>
+                    </form>
+
+                <!--</form>-->
                 <form method = "POST" action = "/reply">
                     <input type="hidden" th:value="${complaints.complaint_id}" name="complaintid">
-                    <input type="hidden" th:value="${agency}" name="complaintagency">
-                    <input type="hidden" th:value="${userid}" name="complaintagency">
+                    <input type="hidden" th:value="${complaints.agency}" name="complaintagency">
+                    <!--<input type="hidden" th:value="${userid}" name="complaintagency">-->
                     <td>
                         <div id="container">
                             <div class="buttonInside">
@@ -119,6 +147,7 @@
                     </td>
 
                 </form>
+
             </tr>
             </tbody>
 
