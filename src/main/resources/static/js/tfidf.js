@@ -88,10 +88,6 @@ $("#erase").click(function(){
     $(this).prev().val("");
 });
 
-$("#erase1").click(function(){
-    $(this).prev().val("");
-});
-
 // preview and hide password
 $("#showPassword").click(function(){
     var foo = $(this).prev().attr("type");
@@ -106,9 +102,3 @@ $("#showPassword").click(function(){
 $("#showHelp").click(function(){
     $("#help").toggle();
 });
-
-//<script type = "text/javascript">
-//function pic()
-//{
-//    document.getElementById("img").src = "picture 1 source";
-//}

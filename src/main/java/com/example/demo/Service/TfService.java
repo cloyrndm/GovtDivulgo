@@ -40,4 +40,12 @@ public class TfService {
         return tfRepository.findAll();
     }
 
+    public Tf findByTfid(int id){
+        return tfRepository.findByTfid(id);
+    }
+
+    public Tf findByStat(String s){
+        return tfRepository.findByStat(s);
+    }
+
 }

@@ -37,8 +37,28 @@ public class Complaint {
 
     private String status;
 
+    private String trainStatus;
+
+    private String address;
+
 //    private String
 
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTrainStatus() {
+        return trainStatus;
+    }
+
+    public void setTrainStatus(String trainStatus) {
+        this.trainStatus = trainStatus;
+    }
 
     public String getStatus() {
         return status;

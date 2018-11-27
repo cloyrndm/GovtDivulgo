@@ -20,6 +20,18 @@ public class Idf {
 //    private String agency;
     private Double idfVal;
 
+    //addd
+    private Integer artId;
+
+    public Integer getArtId() {
+        return artId;
+    }
+
+    public void setArtId(Integer artId) {
+        this.artId = artId;
+    }
+
+
 //    private Integer tfid;
 //    private Integer ngramId;
 //    private Integer freqId;

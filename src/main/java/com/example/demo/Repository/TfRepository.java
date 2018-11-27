@@ -16,4 +16,6 @@ public interface TfRepository extends JpaRepository<Tf,Long> {
     Tf findByNgramIdAndFreqId(int id, int fid);
     List<Tf> findAll();
     Tf findByFreqId(int id);
+    Tf findByTfid(int id);
+    Tf findByStat(String s);
 }

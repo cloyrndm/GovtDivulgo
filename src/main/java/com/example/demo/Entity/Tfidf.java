@@ -20,6 +20,18 @@ public class Tfidf {
     private Double tfidfVal;
     private Integer freqId;
 
+    //addd
+    private Integer artId;
+
+    public Integer getArtId() {
+        return artId;
+    }
+
+    public void setArtId(Integer artId) {
+        this.artId = artId;
+    }
+
+
     public Integer getFreqId() {
         return freqId;
     }

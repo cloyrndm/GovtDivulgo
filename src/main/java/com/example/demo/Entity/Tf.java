@@ -19,6 +19,28 @@ public class Tf {
     private String agency;
     private String word;
     private Double tfVal;
+    private String stat;
+
+    //addd
+
+
+    public String getStat() {
+        return stat;
+    }
+
+    public void setStat(String stat) {
+        this.stat = stat;
+    }
+
+    private Integer artId;
+
+    public Integer getArtId() {
+        return artId;
+    }
+
+    public void setArtId(Integer artId) {
+        this.artId = artId;
+    }
 
     public String getAgency() {
         return agency;

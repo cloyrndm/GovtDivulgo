@@ -36,4 +36,8 @@ public class TfidfService {
     public Tfidf findByTfidfId(int id){
        return tfidfRepository.findByTfidfId(id);
     }
+
+    public Tfidf findByWordAndAgency(String w, String a){
+        return tfidfRepository.findByWordAndAgency(w,a);
+    }
 }
