@@ -96,7 +96,6 @@ public class TfIdfController {
            Double freqq = Double.valueOf(fre1.getFrequency());
            Double arts = Double.valueOf(article1.getArtSize());
            if(tf1.size()==0){
-               System.out.println("NONE");
                Tf tf = new Tf();
                tf.setNgramId(fre1.getNgramId());
                tf.setAgency(article1.getAgency());
@@ -108,7 +107,6 @@ public class TfIdfController {
 //               System.out.println("done tf");
            }
            else if(tfService.findByFreqId(frid.get(i))!=null){
-               System.out.println("TF UPDATE");
                tf5.setNgramId(fre1.getNgramId());
                tf5.setAgency(article1.getAgency());
                tf5.setWord(fre1.getWord());
@@ -119,7 +117,6 @@ public class TfIdfController {
 //               System.out.println("done tf");
            }
            else if(tfService.findByFreqId(frid.get(i))==null){
-               System.out.println("WAASD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                Tf tf = new Tf();
                tf.setNgramId(fre1.getNgramId());
                tf.setAgency(article1.getAgency());
@@ -185,7 +182,6 @@ public class TfIdfController {
                 Idf idf1 = new Idf();
                 Double d = size / Double.valueOf(ngram.getIdfWcount());
 
-                System.out.println("Idf w count: "+ngram.getIdfWcount());
                 Double idff = Math.log(d);
                 idf1.setIdfVal(idff);
                 idf1.setNgramId(ngram.getNgramId());
@@ -197,7 +193,6 @@ public class TfIdfController {
             else if(idfService.findByFreqId(freq.get(i).getFreqId())!=(null)) {
                 System.out.println(2);
                 Double d = size / Double.valueOf(ngram.getIdfWcount());
-                System.out.println("Idf w count: "+ngram.getIdfWcount());
                 Double idff = Math.log(d);
                 idf2.setIdfVal(idff);
                 idf2.setNgramId(ngram.getNgramId());
@@ -210,7 +205,6 @@ public class TfIdfController {
                 System.out.println(3);
                 Idf idf1 = new Idf();
                 Double d = size / Double.valueOf(ngram.getIdfWcount());
-                System.out.println("Idf w count: "+ngram.getIdfWcount());
                 Double idff = Math.log(d);
                 idf1.setIdfVal(idff);
                 idf1.setNgramId(ngram.getNgramId());
@@ -237,7 +231,6 @@ public class TfIdfController {
         if(tf.get(i).getStat()==null) {
             Tfidf tfidf2 = tfidfService.findByWordAndAgency(tf.get(i).getWord(), tf.get(i).getAgency());
             if (tfidfService.findByWordAndAgency(tf.get(i).getWord(), tf.get(i).getAgency()) == null) {
-                System.out.println("INSERT NEW TFIDF");
                 Tfidf tfidf = new Tfidf();
 
                 Idf idf1 = idfService.findByFreqIdAndNgramId(tf.get(i).getFreqId(), tf.get(i).getNgramId());
@@ -253,18 +246,17 @@ public class TfIdfController {
                 tf.get(i).setStat("1");
                 tfService.save(tf.get(i));
             } else if (tfidfService.findByWordAndAgency(tf.get(i).getWord(), tf.get(i).getAgency()) != null) {
-                System.out.println("UPDATE TFIDF");
                 Idf idf1 = idfService.findByFreqIdAndNgramId(tf.get(i).getFreqId(), tf.get(i).getNgramId());
                 Double tfidff = idf1.getIdfVal() * tf.get(i).getTfVal();
                 tfidf2.setTfidfVal(tfidff + tfidf2.getTfidfVal());
                 tfidfService.save(tfidf2);
-
                 tf.get(i).setStat("1");
                 tfService.save(tf.get(i));
             }
         }
 
         }
+
         System.out.println("welp done");
     }
 //    @RequestMapping("/tfidf")
